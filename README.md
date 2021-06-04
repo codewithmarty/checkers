@@ -1,4 +1,4 @@
-# DYNAMITE CHECKERS
+# **DYNAMITE CHECKERS**
 
 ## Rules and General Overview
 Checkers is a game that either involves two players or one player and a CPU. Each player has 12 chips positioned in every other square on either side (see image below). The chips move diagonally across the board, one space at a time, unless two special conditions are met (explained below). The chips come in two colours: red and white. It is convention that red always goes first. Pieces can be eliminated if a player (or CPU) "hops" diagonally over a chip of the opposite colour into an adjacent empty space. The game concludes when all chips of one colour are eliminated from the game. 
@@ -10,6 +10,11 @@ The chips, in general, can only move in one direction and one spot at a time unl
 * A piece reaches the other end of the board and becomes a king piece. 
     * Becoming a king piece allows for that object to move in any diagonal direction if permitted.
 * A piece cannot move in a given diagonal direction if the next two spots are occupied.
+
+## Screenshots
+
+![Starting game board](img/start.png)
+![Final game board](img/final.png)
 
 ## Technologies Used
 * HTML
