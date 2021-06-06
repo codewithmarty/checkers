@@ -1,40 +1,37 @@
 // Adjusted June 3, 2021 @4:14 pm
 // Initialize Variables
-let numPlayerAcquired = 0;    // number of pieces acquired by player
-let numComputerAcquired = 0;  // number of pieces acquired by computer
-const playerHTML = '<img ondragstart="onDragStart(event)" ondragend="onDragEnd(event)" ondragenter="onDragEnter(event)" ondragleave="onDragLeave(event)" class="red" draggable="true" src="img/red-piece.png">';
-const computerHTML = '<img ondragstart="onDragStart(event)" ondragend="onDragEnd(event)" ondragenter="onDragEnter(event)" ondragleave="onDragLeave(event)" class="white" draggable="true" src="img/white-piece.png">';
-const computerKingHTML = '<img ondragstart="onDragStart(event)" ondragend="onDragEnd(event)" ondragenter="onDragEnter(event)" ondragleave="onDragLeave(event)" class="kingWhite" draggable="true" src="img/white-king-piece.png">';
-const playerKingHTML = '<img ondragstart="onDragStart(event)" ondragend="onDragEnd(event)" ondragenter="onDragEnter(event)" ondragleave="onDragLeave(event)" class="kingRed" draggable="true" src="img/red-king-piece.png">';
+let numRedAcquired = 0;    // number of pieces acquired by red
+let numWhiteAcquired = 0;  // number of pieces acquired by white
+const redHTML = '<img ondragstart="onDragStart(event)" ondragend="onDragEnd(event)" ondragenter="onDragEnter(event)" ondragleave="onDragLeave(event)" class="red" draggable="true" src="img/red-piece.png">';
+const whiteHTML = '<img ondragstart="onDragStart(event)" ondragend="onDragEnd(event)" ondragenter="onDragEnter(event)" ondragleave="onDragLeave(event)" class="white" draggable="true" src="img/white-piece.png">';
+const whiteKingHTML = '<img ondragstart="onDragStart(event)" ondragend="onDragEnd(event)" ondragenter="onDragEnter(event)" ondragleave="onDragLeave(event)" class="kingWhite" draggable="true" src="img/white-king-piece.png">';
+const redKingHTML = '<img ondragstart="onDragStart(event)" ondragend="onDragEnd(event)" ondragenter="onDragEnter(event)" ondragleave="onDragLeave(event)" class="kingRed" draggable="true" src="img/red-king-piece.png">';
 const moveAudioElement = new Audio("music/move.mp3");
-const winAudioElement = new Audio("music/win.mp3");
+const winAudioElement = new Audio("music/win2.mp3");
 
 var dragged;
 let killPiece;
 let board = [["white","white","white","white"], ["white","white","white","white"], ["white","white","white","white"], ["","","",""], ["","","",""], ["red","red","red","red"], ["red","red","red","red"], ["red","red","red","red"]];
 let startingId = null;
-let startingX;
-let finalX;
-let startingY;
-let finalY;
-let currentPlayer;
-let previousPlayer;
+let startingX, finalX;
+let startingY, finalY;
+let currentPlayer, previousPlayer;
 let kingPiece;
 let firstTurn = true;
-let ableToMove;
-let kill;
-let dragWorked;
+let ableToMove, kill, dragWorked;
 let registerWinner = false;
 
 // Cache Elements from HTML to JS
 let activeCellsEl = document.querySelectorAll(".active-cell");
-let playerScoreEl = document.getElementById("player-score");
-let computerScoreEl = document.getElementById("computer-score");
+let redScoreEl = document.getElementById("red-score");
+let whiteScoreEl = document.getElementById("white-score");
 let resetBtnEl = document.getElementById("reset");
 let currentTurnEl = document.getElementById("current-turn");
 
 // Add Event Listeners
 resetBtnEl.addEventListener("click", resetGame);
+resetBtnEl.addEventListener("mouseover", mouseOverReset);
+resetBtnEl.addEventListener("mouseout", returnResetButton);
 for (i=0; i < 32; i++){
   activeCellsEl[i].addEventListener("dragstart", onDragStart);
   activeCellsEl[i].addEventListener("dragend", onDragEnd);
@@ -46,19 +43,19 @@ for (i=0; i < 32; i++){
 
 console.log(board[0],board[1],board[2],board[3],board[4],board[5],board[6],board[7]);
 
-function updateScore(player, computer){
-    numPlayerAcquired += player;
-    numComputerAcquired += computer;
-    playerScoreEl.innerHTML = "RED: " + numPlayerAcquired;
-    computerScoreEl.innerHTML = "WHITE: " + numComputerAcquired;
+function updateScore(red, white){
+    numRedAcquired += red;
+    numWhiteAcquired += white;
+    redScoreEl.innerHTML = "RED: " + numRedAcquired;
+    whiteScoreEl.innerHTML = "WHITE: " + numWhiteAcquired;
 };
 
 function kingsRow(event) {
   if (["00", "01", "02", "03"].includes(event.target.id)){
-    document.getElementById(event.target.id).innerHTML = playerKingHTML;
+    document.getElementById(event.target.id).innerHTML = redKingHTML;
     kingPiece = true;
   } else if (["70", "71", "72", "73"].includes(event.target.id)){
-    document.getElementById(event.target.id).innerHTML = computerKingHTML;
+    document.getElementById(event.target.id).innerHTML = whiteKingHTML;
     kingPiece = true;
   } else {
     kingPiece = false;
@@ -80,18 +77,13 @@ function checkAndAnnounceWinner(){
     // console.log(countWhite, countRed);
   if (countWhite === 0) {
     registerWinner = true;
-    computerScoreEl.innerHTML = "WHITE WINS!";
-    currentTurnEl.innerHTML = "";
-    playerScoreEl.innerHTML = "";
+    currentTurnEl.innerHTML = "WHITE WINS!";
     winAudioElement.currentTime = 51;
     winAudioElement.volume = 0.05;
     winAudioElement.play();
     } else if (countRed === 0) {
     registerWinner = true;
-    playerScoreEl.innerHTML = "RED WINS!";
-    currentTurnEl.innerHTML = "";
-    computerScoreEl.innerHTML = "";
-    winAudioElement.currentTime = 51;
+    currentTurnEl.innerHTML = "RED WINS!";
     winAudioElement.volume = 0.05;
     winAudioElement.play();
   }
@@ -178,9 +170,11 @@ function onDrop(event) {
       ableToMove = false;
       kill = false;
   } else if (dragged.className === "red" && differenceY < 0 && !kingPiece) {
+      dragWorked = false;
       ableToMove = false;
       kill = false;
   } else if (dragged.className === "white" && differenceY > 0 && !kingPiece) {
+      dragWorked = false;
       ableToMove = false;
       kill = false;
   } else if (dragged.className === "kingRed") {
@@ -281,8 +275,8 @@ function onDrop(event) {
 }
 
 function resetGame(){
-  numPlayerAcquired = 0;    // number of pieces acquired by player
-  numComputerAcquired = 0;  
+  numRedAcquired = 0;    // number of pieces acquired by red
+  numWhiteAcquired = 0;  
   winAudioElement.currentTime = 0;
   winAudioElement.pause();
   let id = "";
@@ -292,19 +286,29 @@ function resetGame(){
   firstTurn = true;
   registerWinner = false;
   currentTurnEl.innerHTML = 'TURN:<img src="img/red-piece.png">';
-  computerScoreEl.innerHTML = "WHITE: 0";
-  playerScoreEl.innerHTML = "RED: 0";
+  whiteScoreEl.innerHTML = "WHITE: 0";
+  redScoreEl.innerHTML = "RED: 0";
   for (let j=0; j < 4; j++) {
     for (let i=0; i < 8; i++) {
       id = i.toString() + j.toString();
       console.log(id);
       if (board[i][j] === "red") {
-        document.getElementById(id).innerHTML = playerHTML;
+        document.getElementById(id).innerHTML = redHTML;
       } else if (board[i][j] === "white") {
-          document.getElementById(id).innerHTML = computerHTML;
+          document.getElementById(id).innerHTML = whiteHTML;
       } else if (board[i][j] === "") {
           document.getElementById(id).innerHTML = "";
       }
     }
   }
 };
+
+function mouseOverReset(){
+  resetBtnEl.style.backgroundColor = "white";
+  resetBtnEl.style.color = "black";
+}
+
+function returnResetButton(){
+  resetBtnEl.style.backgroundColor = "black";
+  resetBtnEl.style.color = "white";
+}

@@ -10,7 +10,7 @@
     <title>DYNAMITE CHECKERS</title>
 </head>
 <body>
-    <h1 id ="title" class="main-text">DYNAMITE CHECKERS</h1>
+    <h1 id ="title" class="main-text">THE GREATEST CHECKERS GAME ON THE WEB</h1>
     <h3 id="message" class="main-text"></h3>
     <section id="board">
         <div class="cell"></div>
@@ -78,10 +78,12 @@
         <div id="73" class="active-cell" ondrop="onDrop(event)" ondragover="onDragOver(event)"><img ondragstart="onDragStart(event)" ondragend="onDragEnd(event)" ondragenter="onDragEnter(event)" ondragleave="onDragLeave(event)" class="red" draggable="true" src="img/red-piece.png"></div>
         <div class="cell"></div>
     </section>
-    <div id="player-score" class="info">RED: 0</div> 
-    <div id="computer-score" class="info">WHITE: 0</div>
-    <button id="reset" class="info">RESET</button>
-    <div id="current-turn" class="info">TURN:<img src="img/red-piece.png"></div>
+    <section id="score-info">
+        <div id="red-score" class="info">RED: 0</div> 
+        <div id="current-turn" class="info">TURN:<img id="turn-image" src="img/red-piece.png"></div>
+        <div id="white-score" class="info">WHITE: 0</div>
+        <button id="reset">RESET</button>
+    </section>
     <script src="script.js"></script>
 </body>
 </html>
