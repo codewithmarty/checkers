@@ -41,8 +41,6 @@ for (i=0; i < 32; i++){
   activeCellsEl[i].addEventListener("drop", onDrop);
 }
 
-console.log(board[0],board[1],board[2],board[3],board[4],board[5],board[6],board[7]);
-
 function updateScore(red, white){
     numRedAcquired += red;
     numWhiteAcquired += white;
@@ -74,7 +72,7 @@ function checkAndAnnounceWinner(){
       }
     }
   }
-    // console.log(countWhite, countRed);
+
   if (countWhite === 0) {
     registerWinner = true;
     currentTurnEl.innerHTML = "WHITE WINS!";
@@ -144,7 +142,6 @@ function onDrop(event) {
   finalY = event.clientY;
   differenceX = finalX - startingX;
   differenceY = startingY - finalY;
-  console.log (differenceX, differenceY);
 
   event.preventDefault();
   let dropId = event.target.id;
@@ -158,11 +155,7 @@ function onDrop(event) {
   if (!["00","01","02","03","10","11","12","13","20","21","22","23","30","31","32","33","40","41","42","43","50","51","52","53","60","61","62","63","70","71","72","73"].includes(killId)) {
     killId = dropId;
   }
-  console.log("starting ID is", startingId);
-  console.log("kill ID is", killId);
-  console.log("drop ID is", dropId);
 
-  // let killId = (Math.round((parseInt(startingId) + parseInt(dropId))/2)).toString();
   if (Math.abs(parseInt(startingId[0]) - parseInt(dropId[0])) > 2) {
     ableToMove = false;
     kill = false;
@@ -230,14 +223,11 @@ function onDrop(event) {
   if (ableToMove && dragWorked) {
     if (event.target.className == "active-cell") {
       event.target.style.background = "";
-      console.log("removed is", dragged);
       dragged.parentNode.removeChild( dragged );
-      console.log("after removed is", dragged);
       event.target.appendChild( dragged );
       moveAudioElement.currentTime = 0.6;
       moveAudioElement.volume = 0.1;
       moveAudioElement.play();
-      console.log("appended is", dragged);
       if (dragged.className === "red") {
         board[parseInt(dropId[0])][parseInt(dropId[1])] = "red";
         kingsRow(event);
@@ -250,8 +240,8 @@ function onDrop(event) {
           board[parseInt(dropId[0])][parseInt(dropId[1])] = "white";
       }
     }
-      console.log(board[0],board[1],board[2],board[3],board[4],board[5],board[6],board[7]);
   }
+
   checkAndAnnounceWinner();
   if (dragWorked && !registerWinner){
     previousPlayer = currentPlayer;
@@ -291,7 +281,6 @@ function resetGame(){
   for (let j=0; j < 4; j++) {
     for (let i=0; i < 8; i++) {
       id = i.toString() + j.toString();
-      console.log(id);
       if (board[i][j] === "red") {
         document.getElementById(id).innerHTML = redHTML;
       } else if (board[i][j] === "white") {
