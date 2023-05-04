@@ -15,7 +15,7 @@ The chips, in general, can only move in one direction and one spot at a time unl
 
 ## Screenshots
 
-![Starting game board](img/start.png)
+![Starting game board](img/starting.png)
 
 ## Technologies Used
 
