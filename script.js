@@ -1,17 +1,21 @@
-// Adjusted June 3, 2021 @4:14 pm
-// Initialize Variables
-let numRedAcquired = 0;    // number of pieces acquired by red
-let numWhiteAcquired = 0;  // number of pieces acquired by white
 const redHTML = '<img ondragstart="onDragStart(event)" ondragend="onDragEnd(event)" ondragenter="onDragEnter(event)" ondragleave="onDragLeave(event)" class="red" draggable="true" src="img/red-piece.png">';
 const whiteHTML = '<img ondragstart="onDragStart(event)" ondragend="onDragEnd(event)" ondragenter="onDragEnter(event)" ondragleave="onDragLeave(event)" class="white" draggable="true" src="img/white-piece.png">';
 const whiteKingHTML = '<img ondragstart="onDragStart(event)" ondragend="onDragEnd(event)" ondragenter="onDragEnter(event)" ondragleave="onDragLeave(event)" class="kingWhite" draggable="true" src="img/white-king-piece.png">';
 const redKingHTML = '<img ondragstart="onDragStart(event)" ondragend="onDragEnd(event)" ondragenter="onDragEnter(event)" ondragleave="onDragLeave(event)" class="kingRed" draggable="true" src="img/red-king-piece.png">';
-const moveAudioElement = new Audio("music/move.mp3");
-const winAudioElement = new Audio("music/win2.mp3");
 
+let numRedAcquired = 0;    
+let numWhiteAcquired = 0;  
 var dragged;
 let killPiece;
-let board = [["white","white","white","white"], ["white","white","white","white"], ["white","white","white","white"], ["","","",""], ["","","",""], ["red","red","red","red"], ["red","red","red","red"], ["red","red","red","red"]];
+let board = [
+  ["white","white","white","white"], 
+  ["white","white","white","white"], 
+  ["white","white","white","white"], 
+  ["","","",""], ["","","",""], 
+  ["red","red","red","red"], 
+  ["red","red","red","red"], 
+  ["red","red","red","red"]
+];
 let startingId = null;
 let startingX, finalX;
 let startingY, finalY;
@@ -21,17 +25,16 @@ let firstTurn = true;
 let ableToMove, kill, dragWorked;
 let registerWinner = false;
 
-// Cache Elements from HTML to JS
 let activeCellsEl = document.querySelectorAll(".active-cell");
 let redScoreEl = document.getElementById("red-score");
 let whiteScoreEl = document.getElementById("white-score");
 let resetBtnEl = document.getElementById("reset");
 let currentTurnEl = document.getElementById("current-turn");
 
-// Add Event Listeners
 resetBtnEl.addEventListener("click", resetGame);
 resetBtnEl.addEventListener("mouseover", mouseOverReset);
 resetBtnEl.addEventListener("mouseout", returnResetButton);
+
 for (i=0; i < 32; i++){
   activeCellsEl[i].addEventListener("dragstart", onDragStart);
   activeCellsEl[i].addEventListener("dragend", onDragEnd);
@@ -44,8 +47,8 @@ for (i=0; i < 32; i++){
 function updateScore(red, white){
     numRedAcquired += red;
     numWhiteAcquired += white;
-    redScoreEl.innerHTML = "RED: " + numRedAcquired;
-    whiteScoreEl.innerHTML = "WHITE: " + numWhiteAcquired;
+    redScoreEl.innerHTML = '<img id="turn-image" src="img/red-piece.png">: ' + numRedAcquired;
+    whiteScoreEl.innerHTML = '<img id="turn-image" src="img/white-piece.png">: ' + numWhiteAcquired;
 };
 
 function kingsRow(event) {
@@ -76,15 +79,11 @@ function checkAndAnnounceWinner(){
   if (countWhite === 0) {
     registerWinner = true;
     currentTurnEl.innerHTML = "WHITE WINS!";
-    winAudioElement.currentTime = 51;
-    winAudioElement.volume = 0.05;
-    winAudioElement.play();
     } else if (countRed === 0) {
     registerWinner = true;
     currentTurnEl.innerHTML = "RED WINS!";
-    winAudioElement.volume = 0.05;
-    winAudioElement.play();
   }
+
 };
 
 function even(number){
@@ -92,8 +91,6 @@ function even(number){
     return true;
   }
 }
-
-// dragging crap :D
 
 function onDragStart(event){
   dragged = event.target;
@@ -108,7 +105,7 @@ function onDragStart(event){
     startingX = event.clientX;
     startingY = event.clientY;
   } else if (currentPlayer === previousPlayer){
-    event.preventDefault(); // prevents player from repeating
+    event.preventDefault(); 
   }
   else {
     dragWorked = false;
@@ -225,9 +222,6 @@ function onDrop(event) {
       event.target.style.background = "";
       dragged.parentNode.removeChild( dragged );
       event.target.appendChild( dragged );
-      moveAudioElement.currentTime = 0.6;
-      moveAudioElement.volume = 0.1;
-      moveAudioElement.play();
       if (dragged.className === "red") {
         board[parseInt(dropId[0])][parseInt(dropId[1])] = "red";
         kingsRow(event);
@@ -265,19 +259,27 @@ function onDrop(event) {
 }
 
 function resetGame(){
-  numRedAcquired = 0;    // number of pieces acquired by red
+  numRedAcquired = 0;    
   numWhiteAcquired = 0;  
-  winAudioElement.currentTime = 0;
-  winAudioElement.pause();
+
   let id = "";
-  board = [["white","white","white","white"], ["white","white","white","white"], ["white","white","white","white"], ["","","",""], ["","","",""], ["red","red","red","red"], ["red","red","red","red"], ["red","red","red","red"]];
+  board = [
+    ["white","white","white","white"], 
+    ["white","white","white","white"], 
+    ["white","white","white","white"], 
+    ["","","",""], 
+    ["","","",""], 
+    ["red","red","red","red"], 
+    ["red","red","red","red"], 
+    ["red","red","red","red"]
+  ];
   currentPlayer = "red";
   previousPlayer = null;
   firstTurn = true;
   registerWinner = false;
   currentTurnEl.innerHTML = 'TURN:<img src="img/red-piece.png">';
-  whiteScoreEl.innerHTML = "WHITE: 0";
-  redScoreEl.innerHTML = "RED: 0";
+  whiteScoreEl.innerHTML = '<img id="turn-image" src="img/white-piece.png">: 0';
+  redScoreEl.innerHTML = '<img id="turn-image" src="img/red-piece.png">: 0'
   for (let j=0; j < 4; j++) {
     for (let i=0; i < 8; i++) {
       id = i.toString() + j.toString();
