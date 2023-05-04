@@ -25,7 +25,7 @@ The chips, in general, can only move in one direction and one spot at a time unl
 
 ## Play the Game
 
-The game can be accessed [here](https://pages.git.generalassemb.ly/martinnicola/project-1-checkers/). It requires two players. Remember, red always goes first. When the game concludes, a very popular song plays when the winner is announced. Good luck and follow the rules.
+The game can be accessed [here](https://martinnicola.com/checkers/). It requires two players. Remember, red always goes first. When the game concludes, a very popular song plays when the winner is announced. Good luck and follow the rules.
 
 ## Future Work
 
